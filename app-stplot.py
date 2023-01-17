@@ -2,6 +2,15 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
 st.header("USA Population")
 
 df = pd.read_csv('data.csv')

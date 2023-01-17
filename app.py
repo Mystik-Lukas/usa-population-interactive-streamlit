@@ -2,6 +2,17 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+st.set_page_config(layout="wide")
+
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
 st.header("USA Population")
 
 df = pd.read_csv('data.csv')
@@ -59,7 +70,7 @@ df2 = df.query('ages == @minor_only and state != "USA" and year == @year') \
 
 plot3 = eval(f"""px.{type.lower()}(df2,
                 title = "(1) Top States Total Population Based on Year",
-                template = "plotly_white",
+                template = "plotly_dark",
                 x = "state",
                 y = "population"
                 )""")
@@ -95,7 +106,7 @@ df3 = df.query("state == @selected_state and ages == @minor_only")
 
 plot3 = eval(f"""px.{type.lower()}(df3,
                 title = f"(2) {selected_state} total population ({df.year.min()} to {df.year.max()})",
-                template = "plotly_white",
+                template = "plotly_dark",
                 x = "year",
                 y = "population"
                 )""")
@@ -129,10 +140,7 @@ df4 = df4.drop('total', axis = 1)
 
 plot3 = px.area(df4,
                 title = f"(3) {selected_state} adult and minor population ({df.year.min()} to {df.year.max()})",
-                template = "plotly_white",
+                template = "plotly_dark",
                 )
 
 st.plotly_chart(plot3, use_container_width=True)
-
-### FOOTER ###
-st.caption("Made by Lukas Canter with Streamlit")
