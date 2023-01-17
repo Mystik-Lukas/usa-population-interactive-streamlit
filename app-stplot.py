@@ -19,6 +19,8 @@ df.population = df.population.astype(int)
 # 1990 top 10 populations
 
 ### GRAPH 1 ###
+st.subheader("(1) Top States Total Population Based on Year")
+
 st.sidebar.subheader("Options for Graph 1")
 
 states = sorted(df.state \
@@ -57,14 +59,7 @@ range = st.sidebar.slider('Data Range (amount of top states to show)',
 df2 = df.query('ages == @minor_only and state != "USA" and year == @year') \
     .sort_values("population", ascending=False)[:int(range)]
 
-plot3 = eval(f"""px.{type.lower()}(df2,
-                title = "(1) Top States Total Population Based on Year",
-                template = "plotly_white",
-                x = "state",
-                y = "population"
-                )""")
-
-st.plotly_chart(plot3, use_container_width=True)
+eval(f'st.{type.lower()}_chart(df2, x = "state", y = "population", use_container_width=True)')
 
 ### GRAPH 2 ###
 
@@ -91,21 +86,17 @@ selected_state = st.sidebar.selectbox('State',
                                         help = "The state the data will be from"
                                     )
 
+st.subheader(f"(2) {selected_state} total population ({df.year.min()} to {df.year.max()})")
+
 df3 = df.query("state == @selected_state and ages == @minor_only")
 
-plot3 = eval(f"""px.{type.lower()}(df3,
-                title = f"(2) {selected_state} total population ({df.year.min()} to {df.year.max()})",
-                template = "plotly_white",
-                x = "year",
-                y = "population"
-                )""")
-
-st.plotly_chart(plot3, use_container_width=True)
+eval(f'st.{type.lower()}_chart(df3, x = "year", y = "population", use_container_width=True)')
 
 ### GRAPH 3 ###
 st.sidebar.write("---")
 "---"
 st.sidebar.subheader("Options for Graph 3")
+st.subheader(f"(3) {selected_state} adult and minor population ({df.year.min()} to {df.year.max()})")
 
 selected_state = st.sidebar.selectbox('State',
                                         states,
@@ -127,10 +118,11 @@ df4 = df4.rename(columns={ "under18": "minors", "adult": "adults" })
 
 df4 = df4.drop('total', axis = 1)
 
+st.area_chart(df4)
+
 plot3 = px.area(df4,
                 title = f"(3) {selected_state} adult and minor population ({df.year.min()} to {df.year.max()})",
                 template = "plotly_white",
                 )
 
 st.plotly_chart(plot3, use_container_width=True)
-
