@@ -134,3 +134,5 @@ plot3 = px.area(df4,
 
 st.plotly_chart(plot3, use_container_width=True)
 
+### FOOTER ###
+st.caption("Made by Lukas Canter with Streamlit")
