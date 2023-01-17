@@ -6,7 +6,6 @@ st.set_page_config(layout="wide")
 
 hide_st_style = """
             <style>
-            #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
             </style>
