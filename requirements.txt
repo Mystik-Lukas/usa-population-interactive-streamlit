@@ -1,3 +1,4 @@
 pandas
 streamlit
 watchdog # for "better performance"
+plotly
