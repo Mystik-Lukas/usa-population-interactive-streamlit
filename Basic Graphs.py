@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="Basic Graphs", layout="wide")
 
 hide_st_style = """
             <style>
@@ -12,7 +12,7 @@ hide_st_style = """
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
-st.header("USA Population")
+st.title("USA Population")
 
 df = pd.read_csv('data.csv')
 
@@ -29,26 +29,13 @@ df.population = df.population.astype(int)
 # 1990 top 10 populations
 
 ### GRAPH 1 ###
-st.sidebar.subheader("Options for Graph 1")
+st.sidebar.subheader("Options")
 
 states = sorted(df.state \
                     .unique() \
                     .tolist())
 
 states.remove("USA")
-
-type = st.sidebar.selectbox(
-    'Type of graph',
-    ['Bar', 'Line'],
-    key="1type"
-    )
-
-minor_only = 'under18' if st.sidebar.checkbox(
-    'Minor Only',
-    False,
-    help="If checked, it will only show data for people under 18. Unchecked will show the total population",
-    key="1minor_only"
-    ) is True else 'total'
 
 year = st.sidebar.slider('Year (1990-2013)', 
                             int(df.year.min()), 
@@ -64,65 +51,49 @@ range = st.sidebar.slider('Data Range (amount of top states to show)',
                             help="The amount of states to show in the data"
                         )
 
-df2 = df.query('ages == @minor_only and state != "USA" and year == @year') \
-    .sort_values("population", ascending=False)[:int(range)]
-
-plot3 = eval(f"""px.{type.lower()}(df2,
-                title = "(1) Top States {'Total' if minor_only == 'total' else 'Minor (under 18)'} Population Based on Year",
-                template = "plotly_dark",
-                x = "state",
-                y = "population"
-                )""")
-
-st.plotly_chart(plot3, use_container_width=True)
-
-### GRAPH 2 ###
-
-st.sidebar.write("---")
-"---"
-st.sidebar.subheader("Options for Graph 2")
-
-type = st.sidebar.selectbox(
-    'Type of graph',
-    ['Bar', 'Line'],
-    key="2type"
-    )
-
-minor_only = 'under18' if st.sidebar.checkbox(
-    'Minor Only',
-    False,
-    help="If checked, it will only show data for people under 18. Unchecked will show the total population",
-    key="2minor_only"
-    ) is True else 'total'
-
 selected_state = st.sidebar.selectbox('State',
                                         states,
                                         index=0,
                                         help = "The state the data will be from"
                                     )
 
+minor_only = 'under18' if st.sidebar.checkbox(
+    'Minor Only',
+    False,
+    help="If checked, it will only show data for people under 18. Unchecked will show the total population",
+    key="1minor_only"
+    ) is True else 'total'
+
+df2 = df.query('ages == @minor_only and state != "USA" and year == @year') \
+    .sort_values("population", ascending=False)[:int(range)]
+
+plot3 = px.bar(df2,
+                title = f"(1) Top States {'Total' if minor_only == 'total' else 'Minor (under 18)'} Population Based on Year",
+                template = "plotly_dark",
+                x = "state",
+                y = "population"
+                )
+
+st.plotly_chart(plot3, use_container_width=True)
+
+### GRAPH 2 ###
+
+"---"
+
 df3 = df.query("state == @selected_state and ages == @minor_only")
 
-plot3 = eval(f"""px.{type.lower()}(df3,
+plot3 = px.bar(df3,
                 title = f"(2) {selected_state} {'Total' if minor_only == 'total' else 'Minor (under 18)'} Population ({df.year.min()} to {df.year.max()})",
                 template = "plotly_dark",
                 x = "year",
                 y = "population"
-                )""")
+                )
 
 st.plotly_chart(plot3, use_container_width=True)
 
 ### GRAPH 3 ###
-st.sidebar.write("---")
-"---"
-st.sidebar.subheader("Options for Graph 3")
 
-selected_state = st.sidebar.selectbox('State',
-                                        states,
-                                        index=0,
-                                        help = f"The state the data will be from",
-                                        key="3selected_state"
-                                    )
+"---"
 
 df4 = df.query('state == @selected_state')
 
