@@ -68,7 +68,7 @@ df2 = df.query('ages == @minor_only and state != "USA" and year == @year') \
     .sort_values("population", ascending=False)[:int(range)]
 
 plot3 = eval(f"""px.{type.lower()}(df2,
-                title = "(1) Top States Total Population Based on Year",
+                title = "(1) Top States {'Total' if minor_only == 'total' else 'Minor (under 18)'} Population Based on Year",
                 template = "plotly_dark",
                 x = "state",
                 y = "population"
@@ -104,7 +104,7 @@ selected_state = st.sidebar.selectbox('State',
 df3 = df.query("state == @selected_state and ages == @minor_only")
 
 plot3 = eval(f"""px.{type.lower()}(df3,
-                title = f"(2) {selected_state} total population ({df.year.min()} to {df.year.max()})",
+                title = f"(2) {selected_state} {'Total' if minor_only == 'total' else 'Minor (under 18)'} Population ({df.year.min()} to {df.year.max()})",
                 template = "plotly_dark",
                 x = "year",
                 y = "population"
@@ -120,7 +120,7 @@ st.sidebar.subheader("Options for Graph 3")
 selected_state = st.sidebar.selectbox('State',
                                         states,
                                         index=0,
-                                        help = "The state the data will be from",
+                                        help = f"The state the data will be from",
                                         key="3selected_state"
                                     )
 
@@ -138,7 +138,7 @@ df4 = df4.rename(columns={ "under18": "minors", "adult": "adults" })
 df4 = df4.drop('total', axis = 1)
 
 plot3 = px.area(df4,
-                title = f"(3) {selected_state} adult and minor population ({df.year.min()} to {df.year.max()})",
+                title = f"(3) {selected_state} Adult and Minor Population ({df.year.min()} to {df.year.max()})",
                 template = "plotly_dark",
                 )
 
